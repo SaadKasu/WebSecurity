@@ -4,3 +4,4 @@
 <!ENTITY % end "]]>">
 <!ENTITY all "%start;%file;%end;">
 ]>
+<data>&all;</data>
