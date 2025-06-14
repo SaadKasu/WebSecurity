@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
+        <input id="testurl" value="https://hw06.websec.cs.uni-paderborn.de/a1.php?state=A" style="width: 400px;">
+        <button onclick="manual_check()">Check</button>
+        <div id="result">n/a</div>
+        <script>
+            async function check(url) {
+                console.log("URL", url);
+
+                // TODO: Wait for the expensive window to load, e.g. via timeout
+                // then create an iframe to the same site
+                var ifr = document.createElement('iframe');
+                ifr.src = url;
+                document.body.appendChild(ifr);
+                var start = performance.now()
+                ifr.onload = () => {
+    // When the iframe loads calculate the time difference
+                var time = performance.now() - start;
+                console.log(ifr.performance);
+            }
+    }
+            async function manual_check() {
+                let url = document.getElementById("testurl").value;
+                document.getElementById("result").innerText = await check(url);
+            }
+        </script>
+    
+</body></html>

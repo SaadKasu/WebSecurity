@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
+        <button onclick="exfiltrate()">Run</button>
+        <h2 id="result">---</h2>
+
+        <script>
+        // TODO: implement a function that returns the state of the url provided
+        async function check(url){
+            return false
+        }
+
+
+        // TODO: find state-dependent url
+        let challenge_url = ''
+
+
+        // log the result to the console and the page
+        function log(msg){
+            document.getElementById("result").innerText = msg
+            console.log(msg)
+        }
+
+
+        async function exfiltrate(){
+            let letters = '}_abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+            let flag = 'flag{'
+
+            // TODO: implement XS-Search attack
+            log(flag)
+
+            return flag;
+        }
+
+
+
+        </script>
+    
+</body></html>

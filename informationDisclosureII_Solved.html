@@ -1,0 +1,98 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>sol</title>
+    <script src=
+"https://code.jquery.com/jquery-3.6.0.min.js">
+    </script>
+</head>
+
+<body>
+    <form action="https://websec.cs.uni-paderborn.de/websec/api/htmlTampering/salaryTwo" id="myform" method = "post">
+        <select id="employee" name="employee" onchange="selectUser()">
+            <option value="0" label="Choose Actor" selected="selected">Choose Employee</option>
+            <option value="101" label="Kristen Wiig">Kristen Wiig</option>
+            <option value="102" label="Michael Pena">Michael Pena</option>
+            <option value="103" label="Jessica Chastain">Jessica Chastain</option>
+            <option value="104" label="Matt Daemon">Matt Daemon</option>
+            <option value="105" label="Jennifer Lawrence">Jennifer Lawrence</option>
+            <option value="106" label="Liam Hemsworth">Liam Hemsworth</option>
+            <option value="107" label="Chris Pratt">Chris Pratte</option>
+            <option value="108" label="Morten Tyldum">Morten Tyldum</option>
+            <option value="109" label="Gary Ross">Gary Ross</option>
+            <option value="110" label="Ridley Scott" id = "RidScott">Ridley Scott</option>
+        </select>
+        <label>Salary:</label>
+        <label id="salary">-</label> <br>
+        <label>Salary of Ridley Scott</label>
+        <input type="text" ,="" id="solution" value="NOTHING">
+        <input type="submit" value="Submit">
+        <label id="response"></label>
+    </form>
+
+<script>
+    let myform = document.getElementById('myform');
+    myform.addEventListener('submit', submitButtonClicked);
+
+
+    async function submitButtonClicked(e) {
+        e.preventDefault();
+        sendSolution();
+    }
+
+    async function sendSolution() {
+
+        $.ajax({
+                    url: 'https://websec.cs.uni-paderborn.de/websec/api/htmlTampering/salaryTwo',
+                    type: 'POST',
+                    data: "solution=" + document.getElementById("solution").value,
+                    async : false
+                }).done(function (response) {
+                    console.log(response);
+                    document.getElementById("response").innerHTML = response;
+        });
+    };
+
+    async function selectUser() {
+        var uid = document.getElementById("employee").value;
+        if (uid == 0){
+          document.getElementById("salary").innerHTML = "-";  
+        }
+        else{
+            let result = await fetchSalary(uid);
+            document.getElementById("salary").innerHTML = result;
+        }
+    }
+
+    async function fetchSalary(uid) {
+        console.log(uid);
+        var salaryVar;
+        $.ajax({
+                    url: 'https://websec.cs.uni-paderborn.de/websec/api/htmlTampering/salaryTwo',
+                    type: 'POST',
+                    data: "uid=" + uid,
+                    async : false
+                }).done(function (response) {
+                    var json = JSON.parse(response);
+                    var user = json.find(el => el.id === uid);
+                    console.log(user["salary"]);
+                    salaryVar =  user["salary"];
+                });
+        console.log("Salary Var : "+salaryVar);
+        return salaryVar;
+    }
+
+
+    // Here you can add your own functions
+
+    async function fetchDefaultData(){
+        var uid = document.getElementById("RidScott").value;
+        let result = await fetchSalary(uid);
+        console.log("Ridley Scott - "+result);
+        document.getElementById("solution").value = result;
+        sendSolution();
+    }
+    window.onload = fetchDefaultData;
+
+</script>
+
+</body></html>

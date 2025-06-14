@@ -1,0 +1,66 @@
+What is SAML based Single sign on ? SAML is security assertion markup language and is used to authenticate the users that use an application. SAML makes Single Sign On possible. In Single Sign On, a user is authenticated once and then the authentication is communicated to different applications.
+In Single Sign On there are 3 parties :
+    -> SUbject - the user who is trying to access the application
+    -> Identity Provider - Service that confirms user identity through login process
+    -> Service Provider - The service that the user is trying to access.
+The Typical Flow may look like :
+    > User tries to access a service.
+    -> the serivce asks for an SAML assertion from the identity provider.
+    -> If the user is already logged in great, else the user is asked to login 
+    -> Once loged in the identity provider sends an SAML assertion to the service.
+An SAML Assertion - Contains information about the user like identity, source of assertion, time, etc.
+
+SAML is used for Authentication not Authorization. Authentication checks the identity of the person. Authorization checks the persons permissions.
+
+JSON + Security ?
+
+
+Dev tools - Inspect under Network
+
+https://google.com:microsoft.com@upb.de/example.com
+
+In this case google.com and microsoft.com are username and password. UPB is the domain name
+
+Fragments act as anchors and can be used to jump to specifc sections of the page
+
+
+What are content Negotiation Headers - Used for serving different reresentations of a resource to the same URI to help the user agent specify which agent is best suited for the user(Example, which language, image format, Encoding, etc.)
+
+In content Negation Header, q factor shows the preference. Default is 1. Higher values are prefered.
+
+In content negation Header, the q factor matters, if the server supports the language then the language with the higher q factor will be the language.
+
+
+Control Header :
+    -> Expect is used to only expect certain responses from the server.
+    -> Etag value - Unique identifier for multiple representations of the same resource. Server sends the resource if only the etag value matches.
+    -> Max-Forwards : Used to define the maximum times a request can be forwarded by proxies.
+    -> Host : host and port information from the target URI
+
+Condition Headers :
+    -> If Modified, If Unmodified - Checks if the resource is modified or unmodified since a given time stamp
+    -> If Match, If non-Match - Checks if the Etag value matches any of the values 
+
+Request Context : 
+    -> Referer : From where the user has come to our website
+    -> User Agent - Contains info about device, browser, browser version. Helps to make expereince better.
+
+
+Response Header :
+    -> Control Data - age (time elapsed since response generated ), expires (When does it expire),expires and date.
+    -> Validator Header Fields - Etag, lastmodified, 
+    -> Response Context - Allow (Allows these supported/ Advertized methods),Server (Technology used by the server), Allow Ranges (Allows to indicate if complete or part of the resource can be requested from the server)
+    -> 
+
+Encoding : To send special chars, password in the URL, it should be encoded. URL encoding is used here. ASCII values are used.
+
+For Binary Data (like images) use Base64. 
+In Base64, every 3 Bytes of data are converted to 4 Characters so each char contains 6 bits (2⁶ = 64). These chars are now represented in any of the 64 chars that are user readable. 
+
+If data is not 3 bytes divisible, then padding bits are added.
+
+HTTP headers only work with ASCII hence binary is converted to Binary
+
+
+RestClient VSCode
+

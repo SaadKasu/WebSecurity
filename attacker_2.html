@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
+    <button onclick="checkA()">Check A</button>
+    <button onclick="checkB()">Check B</button>
+    <script>
+        function checkA() {
+            check('https://hw06.websec.cs.uni-paderborn.de/a1.php?state=A')
+        }
+        function checkB() {
+            check('https://hw06.websec.cs.uni-paderborn.de/a1.php?state=B')
+        }
+        const check = async (url) => {
+            return new Promise(r => {
+                let iframe = document.createElement('iframe')
+
+                window.onmessage = (e) => {
+                    iframe.remove()
+                    let div = document.createElement('div')
+                    div.innerText = e.data
+                    document.body.appendChild(div)
+                    return r(e.data)
+                }
+
+                iframe.srcdoc = `
+                    <iframe id="frame" src="${url}"></iframe>
+                    <script>
+                        window.onload = () => {
+                            if (window.document.body.textContent.includes("Status Code 500")){
+                                parent.postMessage(1,'*');
+                            }
+                            else{
+                               parent.postMessage(0,'*'); 
+                            }
+                        }
+                    <\/script>`
+                document.body.appendChild(iframe)
+            })
+        }
+    </script>
+
+
+</body></html>

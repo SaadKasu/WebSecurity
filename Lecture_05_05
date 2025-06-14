@@ -1,0 +1,72 @@
+Cross Site Scripting :What if instead of using an Ifram to inject a website into our website we directly inject script directly into the website.
+    -> Used to bypass Same Origin Policy
+    -> Goal : Inject scripts directly into web pages and bypass SOP
+    -> Used for : Leaking sensative data or execute JS functions.
+
+    -> Types : Reflected, Stored, DOM-based and scriptless attacks.
+
+    -> These types are divided based on where the mistake is made and whether they are persistent or non persistent
+
+Stored XSS : 
+    -> Goal : injecting script persistenetly on the website.
+Storage on the website is exploited. Script is stored on the website
+    -> Client has access to some website and can post on the website
+    -> There is a person that restreives the post 
+    -> Attacker can also post to the website. The attacker will post some script into the website and when any person retrieves the post, the script will be executed in the browser.
+
+pan
+    
+Non Persistent XSS :
+    -> Reflective XSS : Rely on reflection explots. It is not stored on the website. The attacker send the link with script which will be executed in the client side.
+        -> In the GET request the attacker will send a script.
+        -> This can be useful when an attacker will send a script that will extract cookies  
+        Perrequisites :
+            -> Victim clicks on the link.
+        Goal : Run a script in the client browser so that events or script are executed.
+             
+        -> Think of google where when searched something. Google returns a list of data. This data will include what you had searched for. This is refelction. Google handels script XSS.
+        
+        -> As an attacker it matters How you have embeeded the attack. If it is in a attiribute or in a tag. If inside an attribute it would matter that you exit out of the attribute and then conduct the attack.
+
+        -> Refelcted XSS means that when you put something into the website the website reflects it. For example. when you seach for xyz on google, the searches contain xyz. Similarly think of the attack shown in class using web gaot where when credit card was entered in the field and made bold it was refelced in the response of the website. This is refecltion.
+
+        -> In the exaple shown in class, what we were entering in the CC field was actually getting sent as a GET request to the website. So if this link is sent to victim with correct script inside it could be used to get sensative data or perform malicious actions on behalf of the attacker.
+
+
+JS will always be executed on the client browser.
+
+
+Reflective DOM based XSS : Also called local XSS
+    -> Everthing happens in the browser
+    -> Attack payload is executed as a result of modifying the DOM
+
+    -> In this case we use document.write to change the website script which the affects the DOM of the website hence it is DOM based. It is only done locally.
+
+    -> If you have #, anything after that symbol is a fragment and will not be send to the server so it is preferred in attacks so that server can not santitize the script
+
+    -> Since it is DOM based the script is executed after the request is sent to server. So it can be sanatized. But when we use fragments the content of the fragment is not sent.
+
+
+Client side Persistent XSS : Comprimised cookies or data structures can be used to store scripts that can be executed
+
+Scriptless attacks : 
+
+    -> Script injection is not possible as they are disabled. But data can be inserted into the website (different elements or links or the website).
+
+    -> In this case the element can be a stylesheet that has an href. The href can have a key logger that can based on the user password hit specific URLs or perform some actions. But in this case the attacker should be able to guess the password correctly only then will the action be executed but that is really difficult
+
+    -> An attacker used SVGs.
+
+Preventions towards XSS Attacks :
+    -> Sanitize user input :
+    -> Prevent script tags, only html tags
+    -> Browser has HTTPOnly flag that says cookies are not accessable while using JS. 
+    -> Domain of cookies can be restricted so that they are only accesable in certain places.
+
+OWASP rules :
+    Rule 0 -> Never put untrusted data in scrips, comments , attributem tags or CSS. Anything that user enters in untrusted.
+    Rule 1 -> Convert sensative chars like <> & " ' into special strings so that it can not be injected.
+
+
+
+Great to XSS test it - https://github.com/0xsobky/HackVault/wiki/Unleashing-an-Ultimate-XSS-Polyglot

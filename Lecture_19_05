@@ -1,0 +1,101 @@
+Attack Flow SX Leak
+
+Window handler functions can be used to bypass same origin policy.
+
+There can be detectable differences based on different properties of the page like frames or sockets in the pag.
+
+Cache leak : When searching for certain queries in gmail. an image is laoded. Now as an attacker we can force the victim to clear the cache and after that when the search is executed based on the time to load the page the attacker can judge if there are results for the search query
+
+Same site cookies are best against XS leaks since it forces browsers to include cookies only in same site requests.
+
+In Same origin, if scheme is https in one url and http in other but it uses port 443 still it is not same origin. But if both use https and one does not have the port number defined then you can say they are same origin.
+
+Same Site cookies, whether cookies are sent from same site or cross site.
+
+Content Security Policy
+
+-> Content Security Policy is a distinction used to differentiate between developer code and the code of the attacker.
+-> Deployed as HTTP header or HTML meta tag.
+-> Does not fix XSS, merely mitigates its impact
+
+CSP in a nut shell : 
+    -> Restrict Classes(scripts) via CSP directives (src srcs)
+    -> For each directive supply list of host expressions or keywords
+    -> If directive exists : Block everything that is not allowed-list
+
+This can be an example of a header that can be included :
+    -> Content-Security-Policy: img-src https://example.com/cat.jpg
+    for this code 
+        <body>
+        <!-- ... -->
+        <img src='https://example.com/cat.jpg'>
+        <!-- ... -->
+        </body>
+
+Somelevel of regex can be allowed in directives for sub domains.
+
+scr of a lot of things (like fonts, images, rames, etc) can be defined, default-src is that only same site is allowd.
+
+CSP level 3 is deafult. 
+
+CSP level 1 allows self or default-src but this blocks inline scripts. There is a way of enabling inline script but then the attacks that we spoke about it previous lectures
+
+Multiple CSPs can be seperated by a comma. All CSPs need to be met if there is a comma between them. If no comma then it is an OR, one of them needs to be met. No comma means all the directives are 1 and that is why any of them should be true in an OR fashion
+
+If we define a script source but default is self then script falls back to default as well
+
+
+Problems with CSP level 1 :
+    -> Everything needs to be in the CSP
+    -> Inline scripts are not allowed in a safe way.
+
+Unsafe inline will allow same site scripts and other unsafe ones too if they are only in the same site. But not allow scripts from external sites
+
+
+
+CSP level 2 :
+    -> Introduces hashes and nonces which are randomly generated for different sources. This helps because the inline script can be appended by a nonce which can also be added in the CSP header. This will allow that inline script to function normally.
+    -> Nonce and Hashes disables unsafe inline
+
+    -> Script Hashes are generated over the script that is included and the that are using to the script. 
+    
+    -> Nonce is a random number generated and associated with the script while a hash is generated using the script contents and the scripts.
+
+    -> If nonce or hash is included then source even if it is not selft is irrelevant.
+
+    -> The server writes the security policy, generates the nonce writes in header and puts in every script inside.
+
+
+CSP level 2 issues :
+    -> In the example where we used cdn.com/jquery and widet.com/library.js. If we only include library.js in the CSP with a nonce, the nonce will not propogate to the cdn url.
+
+
+CSP level 3 :
+    -> Strict-directive - propogates trust dynamically to added scripts (no need to copy nonce)
+    -> Disables host based allow lists (similar to nonce disabling unsafe inline).
+
+    -> Only programatically injected scripts are allowed by strict dynamic.
+
+    -> Library js example will work here since one script is dynamically including the script.
+
+
+Other CSP features :
+    -> Prevent UI redressing : Frames injection can be prevented
+    -> TLS enforcement - all http resources are upgraded to https.
+
+CSP mitigation against XSS :
+    -> best mitigation against XSS and most compatible
+    -> Still hard to consider all bypasses.
+
+CSP bypass :
+    -> For this html 
+
+    <body>
+    <!– Injection here -->
+    <!-- Benign page below -->
+    <script nonce="ABCDEF" src="/jquery.js"></script>
+    </body>
+
+the base tag defines the base URL for all relative URLs in the document. 
+    -> Using this tag we can change the base of html and make it as the attacker website so that the jquery file will then be accessed from the attacker website
+

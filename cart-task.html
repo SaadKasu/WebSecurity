@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Shopping list</title>
+	<style>
+		* {
+		    margin: 0;
+		    padding: 0;
+		}
+		body {
+		    background: #f1f1f1;
+		    color: #555;
+		    font-size: 20px;
+		}
+		h1 {
+		    padding: 10px;
+			margin: 20px;
+		    text-align: center;
+		    color: #3ac440;
+		    border-bottom: 1px solid #3ac440;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.selected {
+			background: #a8d1ff;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+	<h1>Shopping list</h1>
+	    <ul id ='list'>
+			<li>Bread</li>
+			<li>Eggs</li>
+		</ul>
+		<form>
+			<input type="text" name="item" id = 'inputField'> <input type="submit" value="Add">
+			<button type="button" onclick="removeItem()">Delete</button>
+		</form>
+	</div>
+	<script>
+		const removeItem = () => {
+            var listItems = document.getElementsByClassName('selected');
+            var list = document.getElementById('list');
+            while (listItems.length > 0) {
+                list.removeChild(listItems[0]);
+            }
+		}
+		document.forms[0].addEventListener('submit', (e) =>  {
+            var inputItem = document.getElementById("inputField").value;
+            if (inputItem){
+                var node = document.createElement("Li");
+                var textNode = document.createTextNode(inputItem);
+                node.appendChild(textNode);
+                document.getElementById("list").appendChild(node);
+            }
+            e.preventDefault();
+		})
+		document.querySelector('ul').addEventListener('click', (e) =>  {
+            var element = e.target;
+            if (element.classList.contains("selected"))
+                element.classList.remove("selected");
+            else
+                element.classList.add("selected");
+		})
+	</script>
+
+</body></html>

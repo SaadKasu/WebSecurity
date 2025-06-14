@@ -1,0 +1,49 @@
+HTTP is stateless and the websites use cookies to track users
+
+HTTP requests retreive status, response header and body from the server and the body retrieved contains HTML, JS and CS
+
+No version after HTML 5. All data is added to the same HTML 5
+
+Changing HTML while inspecting the element only changes it locally BUT you can change certain behaviours of the website so that how the data is sent to the website can be handled.
+
+Can google not use the IP address to see where the request is coming from ?
+
+
+Scripting when used with HTML and when you change the script yu can change a lot of functionality on the HTML by just inspecting the element. Since you can inject the script
+
+
+Web Goat shows you the OWASP Top 10, attacks that happend in the recent years and the taks related to do this.
+
+This shows that client side should not be tested.
+
+DOM - Language neutral interface allowing to access object dynamically using JS. It can be seen as the way how browsers access websites and handle displaying them.
+
+In DOM there is the document and the document contains elements like html and html will then contain head, body,etc.
+
+iframe - allows us to embed foreign elements (forieng html) in our website. Data entered in an Iframe is sent to the server where the iframe is, not the iframe is embedded.
+
+console can allow us to parse the document and use commands to get different parts of the website.
+
+document.querySelector("elementName") - One example of a command
+
+Same Origin Policy : Says that websites can only access content from the website they were loaded from. If a atacker website embedds iframe from a comman website will not be able to access data from website that is embedded because the origin is not the same.
+
+What is Orign - Combination of domain protol and port.
+
+When 443 is used that is the same as default port hence if the path does not include port and one that include 443 as port. Both are the same.
+
+Same Site and Same Origin : Same Site checks scheme (protocal), eTLD(top level domain) + 1.  This could be guardian.com amazon.com etc. . These belong to the same company
+
+Same Site is used for cookies, CSP and other securtiy related mechanisms.
+
+Generally when we try to access the same website from our HTML it will not give any issues.
+
+When accessing a website on different servers, then it is generally blocked but we might want it to enable it.
+
+Cross Origin Data Sharing - It is an HTTP header that describes which origins are allowed to read the content of a website within the browser.
+
+The request includes the origin, where the request comes from.
+
+The response includes Access-Control-Allow-Origin which includes the name of the origin website.
+
+CORS modification is mostly prevented but Man in Middle still can be used to attack the website.

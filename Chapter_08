@@ -1,0 +1,113 @@
+XML and Single Sign On.
+
+Single Sign on uses SAML.
+
+Single sign on : You use a provider that provides you a token that can be used to login to other websites.
+
+In Single Sign on Based attacks, the token may be modified to pretend the user is some one else.
+
+
+XML - Extensible markup language
+    -> structured, platform independent, simplicity, human readable
+    -> Mostly for metadata definations
+    -> Difference between HTML and XML, XML tags are not predefined. XML has no CSS and JS inside. HTML is display for data but XML is for defining the data. Case sensative as opposed to HTML
+
+    Well formed XML document :
+        -> SHould have declaration that includes encoding info
+        -> Root element, which is not the document root.
+        -> Leaf elements which contain text contents.
+        -> Each element need to be closed. Strict compared to HTML.
+        -> Special chars need to escaped.
+        -> Element value needs to be inside single or double quotes.
+        -> Allows namespace defination to resolve conflicts. The namespace can be a link to a website.
+            <con:conversation xmlns:con="https://upb.de"> Namespace prefix: con, Namespace: https://upb.de
+            -> The elements can contain namespace prefix which can help identify which element namespace to use.
+            -> <con:greeting text=“Hello, world!”></con:greeting>
+
+    -> XML Schema : defines the structre of the XML document. It defines what elements are there in the schema and the type of the elements.
+        For this XML :
+            <conversation>
+                <greeting>Hello, world!</greeting>
+                <response>Hello, XML!</response>
+            </conversation>
+        The Schema would be :
+            <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+            <xs:element name=“conversation" type=“conversationType"/>
+            <xs:complexType name=“conversationType">
+            <xs:sequence>
+            <xs:element name=“greeting” type="xs:string" />
+            <xs:element name=“response” type="xs:string" />
+            </xs:sequence>
+            </xs:complexType>
+            </xs:schema>
+
+        -> The schema could be shared to create documents based on the schema
+
+        -> In the schema we can have an extended schema with minOccurs, this says that the document can have min of 0 occurunces of the element
+        -> any elemtnts can have any content or elements inside.
+        -> Default of any element will be 1 but use minOccurs
+
+
+
+
+Document Type Defination :
+    -> Can help you define new entities. Can help you define and validate XML.
+    -> Entities can be thought of as references to other values which when parsed will give you the actual value for example :
+        This is the DTD, which defines 2 entities, world and xml:
+            <!DOCTYPE Hello [
+            <!ENTITY world “Hello, world!”>
+            <!ENTITY xml “Hello, XML!”>
+            ]>
+        These entities can now be used in the XML document :
+            <conversation>
+            <greeting>&world;</greeting>
+            <response>&xml;</response>
+            </conversation>
+        And when parsed this would look like :
+            <conversation>
+            <greeting>Hello, world!</greeting>
+            <response>Hello, XML!</response>
+            </conversation>
+
+    -> Used for dynamic addition to the XML documents .
+
+
+
+Attacks :
+    Denial of Service :
+        -> Entities inside entities can be injected into a doccument that uses DTD with entites and this can result in a lot of storage space or repeated action.
+
+            Counter Measures -> Limit size of XML or don't use Entities. 
+
+        -> External Entiites : Can force the victim to parse external files that may be malicious
+
+
+    Scenario : SVG to FNG files :
+        -> SVG files are XML defined files that have properties of an immage, like widht height, color, text etc.
+        -> There are servers that accept such SVG files and return PNG files.
+        -> Here the entity can be used to reference the malicilous files at a website.
+
+    For Applications that use content type JSON, in this case you can check if the application accepts XML processing by changing the content type.
+    -> It also depends on the parser if it is configured to read external files.
+
+    -> Certain files can not be parsed due to presence of certain special chars like <> and hence the attacks need to see which files to use.
+        .> A bypass for this would be to use entities inside of entities.
+            -> CDATA allows for any data inside it irrespective of speacial chars, so we can just define our file as an entity inside a CDATA entity which will allow it to be parsed
+
+        <!DOCTYPE data [
+        <!ENTITY % start "<![CDATA[">
+        <!ENTITY % file SYSTEM "file:///etc/fstab">
+        <!ENTITY % end "]]>">
+        <!ENTITY all "%start;%file;%end;">
+        ]>
+        <data>&all;</data>
+
+
+Countermeasures : 
+    -> Depends on parser and how complex it can be to disable external parsing
+
+
+Problem with arbitary URL invocation :  
+    -> Certain parsers don't allow external servers to be contacted but still there is a vulnerability with URL invocation.
+    -> URLs like http://localhost:9000/shutdown can stop the server if executed inside server behind the filewall. This is DoS but there are other types of such attacks behind the firewall. 
+    -> 127.0.0.1 if bypassed by parsers can be replaced by local host or other ways to bypass.

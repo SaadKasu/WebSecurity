@@ -1,0 +1,101 @@
+Web attacks :
+
+    -> Attacker Model : Defines who wants to do what and how they are doing it.
+        -> It contains :
+            -> Attacker Goals :
+                -> Want to shutdown a service or to get access to one or multiple accounts
+            -> Attackers Resources :
+                -> One Pc or control a bot network
+        -> Why do we need attacker model
+            -> Victims Behaviour :
+                -> Victim clicks on a link or downloads a file.
+    -> Methodology :
+        -> Analysis phase : 
+            -> Set up and configure the test enviornment
+            -> Observe the normal behaviour
+            -> Document points of interest
+
+        -> Attacks :
+            -> Create a test catalog with attack classes and corresponding attacker models
+            -> Create test vectors
+            -> Test Vectors
+            -> Documentation, screenshots, exploits
+        -> Report : 
+
+
+Burpsuite is able to do man in the middle attack because burpsuite browser is configured to have a valid trust certificate by the browser.
+    -> To implement it with Firefox, you have to take certificate from burpsuite and add it to our firefox.
+
+Cross Site Request Forgery :
+    -> Assumption : User is logged in to a website. has a cookie for the website
+    -> Prerequisite : User visits attacks website, and some action on the website is executed.
+    -> Here attacker forces user to execute a CSRF to a desireable website.
+    
+    -> For example :
+        -> Wen a user logs into a website and the website returns a cookie.
+        -> Now the attacker gets the user on their website and uses the cookie to send a request to the website using the users browser. 
+        -> Here attakcer does not get the cookie, he just forces the user to execute the request.
+        -> The browser includes the cookie automatically because it is to the same website we already have the cookie for.
+
+CSRF attacks on Twitter :
+    -> Twitter allows a URL to send a tweet. A simple Get request triggers a tweet. Some one can pull the victim on their website and on the attacker website the victim will be then tweeting by the automatic script
+
+CSRF Counter measures :
+    -> Dont use GET for performing permanent data modification
+    -> CSRF tokens are generated for each form and for each operation this CSRF token is validated along with the cookies. The server knows about this csrf token so the attaker will not be able to generate this token since they are also bounded to the user sessions.
+        -> One time, Bound to user sessions and randomly generated.
+
+    -> Same Site Cookies - Allows you to set how the cookies are used. There are 3 levels :
+        -> Strict : Cookie is prevented for Any cross site usage. Even if the link is on the same website
+        -> None : All cookies will be sent, even in cross site request
+        -> Lax : this is default and cookies will be sent when navigating from one website to another. Only if the website we are navigating from is the website that owns the cookie.
+        -> Cookies have this property. And browsers will not embedd such cookies.
+
+    -> Login forms need to have a CSRF token too becuase what can happen is, attacker can make you login with his details and all operations you do will then be visible to him and all your data, he can get. This is session Fixation attack. Fix the session of the victim to the attacker or some other one that can be dangerous. 
+        -> The attacker can't see any user name, password or any sensitive details but the other data is vulnerable.
+
+
+Click Jacking :
+    -> Wbsite uses CSRF tokens correctly. How can I force the user to perform actions on the real website. How can I force the user to click on something ?
+
+    -> Attacker Goal : Attacker wants user to do something on the orignal website. Force the user to perform a transaction or log out, etc.
+
+    -> Attacker Creates an Iframe on his website and embedds the desired website there and changes the opacity of the iframe so that it is not visible. Then we can place the button we want the user to press just below one of our buttons and this will make the user click an action he doesn't know there is. Iframe is on top.
+
+    -> To understand Click Jacking it is important to know why same origin and same site policy will not block the user here.
+
+    -> Click jacking is a sub class of UI redressing (UI is reordered to trick the victim) 
+    
+    -> In android this was used to make users click some system level stuff to install apps, extend rights, etc.
+    -> To prevent this : Don't allow people to iframe your website. This can be done by using X Frame options header.
+        -> This header has 2 options : 
+            -> Deny : Will deny this website to be included as an I frame
+            -> Same Origin : Only same origin websites can embedd this iframe
+    -> Other option is Content Security Policy : This is also an HTTP header and this also says which websites can embedd you :
+        -> none : No one
+        -> Self : Only this website and sub domains (same origin)
+        -> Self + som other websites : You can define which other websites can embedd you.
+    -> In this case the browser retrives the data but does not display it
+
+    -> JavaScript frame busting : Use javascript, which can check window.location != top.location, then redirect to the embedded website.
+        -> This will not work if user deactivates JS or
+        -> If  user loads JS in sandbox then this will not be executed.
+
+    -> 
+    
+
+Cursor Jacking :
+    -> Using CSS we can change the shape, and dimenstions of the cursor which can make the user click something he does not want to.
+
+Can You Just Explain Same Origin Policy and Same Site ?
+    -> Origin is a combination of a scheme (protocol, HTTP/HTTPS), a hostname and a port(if specified), example : In https://www.example.com:443/foo the origin is https://www.example.com:443. 
+https://www.example.com:443 and https://login.example.com:443 or https://example.com:443 are different origins because the sub domain is different
+
+    -> Site : Is a combination of scheme, TLD (.com or .org. in) and the part of the domain just before it (that is TLD +1) in https://www.example.com:443/ the site is https://example.com. eTLD is effective top level domain and is used in top level domains like co.jp or github.io. Where just .jp or just .io will not be useful. so in this case eTLD is .co.jp or github.io
+
+        -> Schemeless Same Site : Here the scheme (https or http) does not matter. only eTLD + 1 matters
+
+
+SOP - Prevents inserted Iframes from getting sensitive information that is entered into inframe 
+
+

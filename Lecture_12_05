@@ -1,0 +1,63 @@
+Countermeasures :
+    -> Server side XSS filter (ModSecurity)
+
+    -> Client side : Somehow try to see 
+
+Mutation based XSS : mXSS
+    -> Browser optimize HTML Markup before rendering. innerHTML is the problem. 
+    -> These are not an issue becuase not caught by filters
+    -> Still a problem
+
+innerHTML : 
+    -> DOM Property allows you to manipulate DOM. After retrieving from server the browser parses everything.
+    Modifying the dom can be done via the JS.
+
+    Problem with inner html :
+        -> It is not idempotent and browser tries to repair broken html.
+    
+    -> This can be a problem when the browser changes a benign content where due to browser trying to repair the content.
+
+
+XSS filters don't catch these issues because they are not issues till they are "cleaned" by the browser.
+
+There are no standards which broser follows, all of them try to be clever in their sense.
+
+Defense against these innerHTMLs is done by using sanitizers (like DOMPurify). These try to view the page as it would be visible to the user when they load it so executed after the filters.
+
+Note on How the browser tries to correct for invalid HTML : So basically there are HTML parsers and JS parsers. when there is an html tag the html parser is used but in case of JS a JS parser is used. This is important because if the outer tag is HTML tag and inner, incorrect tag is JS, then the HTML parser will deal with the JS tag as an HTML. While in JS outer tag, the opposite happens.
+
+ Different browsers do this parsing differently and hence it doesn't make sense or the library at the server can not be big enough to allow parsing for all browsers.
+
+Template tag is used to parse the HTML, since like innerHTML tag it does not load the error. For example, when we use an img tag with an on error. If using inner html the on error would be fired while when using template the same will not be fired. and we can use the template content to santitize.
+
+Now when using a noscript tag. This is parsed differently in the template tag and by the browser. Because browser has JS enabled but the template tag has JS disabled hence it can not catch the tag 
+
+
+DOM clobbering :
+-> What is DOM ?
+    -> Basically an API for JS to access HTML elements but also other properties. It has standard methods, standard selectors. Using id and name attributes.
+
+    -> There are different ways we can get elements with ids in the DOM. by document.getElementById, document.querySelector, directly use the id of the element, first access the parent tag by any of the above means and access the child tag using the parent tag.
+
+    -> We can also pverwrite default functions given to the fields. For example and element can be listed with id submit and the parent element can be a form. Now parent.submit should ideally submit the form but it will access the child element
+
+    -> This is called variable cloberring. More than 10% websites use clobbered varibles.
+
+DOM cloberring is to change the DOM via ID and name attributes which create conflicts with default methods.
+
+Attack approach - inject HTML into a page to manipulate the DOM or overwrite global references. and some how changed the JS.
+
+location.href is one of the properties that can not be changed since it is security critical.
+
+DOM cloberring can be used to modify unprotected and uninitialized(global values that are not defined) variables.
+
+In JS, window.elementId is heavily used. wherer a global varibale is set to the elementId or a default value.
+
+Attack, wherer the attaker can only add new elements to body. In this case slide 55, the attacker can add his own element with id config and his own script will be loaded.
+
+
+This can be used to bypass frame busters where if (top != self) is used in the code. wherer you can change the self variable to be something else so iframe is loaded
+
+
+Counter Measures don't work perfectly.
+

@@ -1,0 +1,80 @@
+Injection Attacks 
+
+XSS is also a form of injection.
+
+SQL and PHP injections
+
+PHP injection
+
+<?php
+print("Please specify the file to delete<br>");
+$file=$_GET['filename'];
+system("rm $file");
+?>
+
+Here since it is executing a sytem command, an attacker can add the file name followed by a semi colon which will end the current line and the next command which can expose some vulnerable info can be executed.
+
+like so - http://127.0.0.1/delete.php?filename=bob.txt;id
+
+SQL attacks :
+
+Attacker Model :
+    -> Prerequisites : 
+        -> Web application that has a data repo
+        -> The attacker can comm with the we app
+        -> Attacker influences the app using the att query
+
+    -> Attacker Goal :
+        -> Denial of service by wiping the data : 
+            -> delete tables
+            -> perform large transactions which result in database being occupied and CPU and RAM intensive
+            -> SELECT BENCHMARK can be used to execute a function a number of times which can be used to block the DB
+        -> Unauthorized access to data which can lead to determining DB schema, extracting data, bypass auth etc.
+            -> Information leakage : get the schema of the tables or other version or system realted information.
+            -> Authentication Bypass :
+                -> create the query in such a way that it always evaluates to true.
+
+Numerica SQL Injection : 
+    -> In the background there are no single or double quotes and all input is added as numeric. 
+    -> The trick is to club the and conditons together and add an or condition that always evaluates to true
+
+String SQL Injection : 
+    -> Can be used by escaping literals and getting the 
+
+EIther by escaping the authentication part or by adding an or statement.
+
+-> While executing sql commands as injection be sure to exit from the comments using the special chars like /* or --
+
+
+    -> General Problem :
+        -> mixing sql commands with input user data.
+
+Advanced SQL Injection techniques :
+    -> Blind SQL Injection : If no response from the server is given. Here you use timing or other parameters to find out what is happening in the data base
+    -> Attacking NoSQL : Same approach like SQL
+    -> using OCL Scanners or other scanners to get the data.
+
+
+Injection attacks : Step by Step
+    -> Get info about the database you want to attack using 
+        -> Metadata : OS, used libraries
+        -> Table List
+        -> Fingerprint the database (Convert the large database into a unique short string). I think here it is more like getting the info about the database.
+    -> Retreiving the data
+        -> Get data using the knowledge of the schema or passwords and usernames
+    -> Privilage accesss 
+        -> Data change
+        -> Os take over
+
+Counter Measures against SQL Injections :
+    -> Prepared Statements :
+        -> Instead of concatanating the user input in a existing SQL query, we use prepared statemetns which treat the complete input as a string and don't allow escape out of the string context which makes it impossible to execute other statements.
+    -> Validation : Always validate user input
+        -> Use a list of chars that are either allowed or not allowed
+        -> Use allw list instead of not allow since defining a not allow list that is 100% secure is impossible
+        -> Enforce server side validation
+        -> Is not 100% safe.
+    -> Escaping : Encode dangerous chars like string literals etc.
+    -> Limit DB rights and restricted SQL Queries : Create users that execute a command without DCL or DML or TTL access.
+   
+    -> Prevent Debugging in prod systems since it gives the user/attacker an idea of the DB used in the backend.
